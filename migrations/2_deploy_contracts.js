@@ -22,6 +22,17 @@ const issuer1PubKey = "QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc="
 const issuer2PubKey = "1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg="
 const issuer3PubKey = "oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8"
 
+
+const Web3 = require('web3');
+const BigNumber = require('bignumber.js');
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:22000'));
+const toMintAmount = web3.utils.toWei(new BigNumber(100).toString(), 'ether');
+const toMintAccounts = [
+  "0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E",
+  "0x6c210c624B7D2A1a5E0Bba1207262DBa333D18E0",
+  "0x367e45461Be0D299c47C60eAD4c079078d23243A",
+]
+
 module.exports = async function(deployer) {
   const log = deployer.logger.log;
   try {
@@ -39,6 +50,13 @@ module.exports = async function(deployer) {
 
     const goldToken = await deployer.new(RegulatedToken, registry.address, "Gold Token", "GOLD", {privateFor: [harborPubKey, issuer3PubKey]})
     log('goldToken.address ' + goldToken.address);
+
+    for (var i = 0; i < toMintAccounts.length; i++) {
+      log('Minting tokens to ' + toMintAccounts[i])
+      copperToken.mint(toMintAccounts[i], toMintAmount, {privateFor: [harborPubKey, issuer1PubKey]})
+      silverToken.mint(toMintAccounts[i], toMintAmount, {privateFor: [harborPubKey, issuer2PubKey]})
+      goldToken.mint(toMintAccounts[i], toMintAmount, {privateFor: [harborPubKey, issuer3PubKey]})
+    }
   }
   catch (e) {
     log(e);
