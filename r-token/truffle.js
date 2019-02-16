@@ -14,23 +14,27 @@
    limitations under the License.
 */
 
-const Web3 = require('web3');
-const web3 = new Web3();
-const HDWalletProvider = require('truffle-hdwallet-provider');
-
-const kovanMnemonic = process.env['RTOKEN_KOVAN_MNEMONIC'];
-const infuraKey = process.env['INFURA_KEY'];
-
 module.exports = {
   networks: {
-    development: {
+    harbor: {
       host: "localhost",
-      port: 8545,
+      port: 22000,
       network_id: "*" // Match any network id
     },
-    kovan: {
-      provider: new HDWalletProvider(kovanMnemonic, `https://kovan.infura.io/${infuraKey}`),
-      network_id: '42'
-    }
+    issuer2: {
+      host: "localhost",
+      port: 22001,
+      network_id: "*" // Match any network id
+    },
+    issuer3: {
+      host: "localhost",
+      port: 22002,
+      network_id: "*" // Match any network id
+    },
+    issuer4: {
+      host: "localhost",
+      port: 22003,
+      network_id: "*" // Match any network id
+    },
   }
 };
