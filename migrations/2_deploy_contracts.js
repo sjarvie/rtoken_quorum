@@ -51,6 +51,17 @@ module.exports = async function(deployer) {
     const goldToken = await deployer.new(RegulatedToken, registry.address, "Gold Token", "GOLD", {privateFor: [harborPubKey, issuer3PubKey]})
     log('goldToken.address ' + goldToken.address);
 
+    // Set permissions on regulator service
+    regulator.setPermission(copperToken.address, toMintAccounts[0], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(copperToken.address, toMintAccounts[1], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(copperToken.address, toMintAccounts[2], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(silverToken.address, toMintAccounts[0], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(silverToken.address, toMintAccounts[1], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(silverToken.address, toMintAccounts[2], 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Receive
+    regulator.setPermission(goldToken.address, toMintAccounts[0], 0x1 | 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Send/Receive
+    regulator.setPermission(goldToken.address, toMintAccounts[1], 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Receive
+    regulator.setPermission(goldToken.address, toMintAccounts[2], 0x2, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]}) // Receive
+
     for (var i = 0; i < toMintAccounts.length; i++) {
       log('Minting tokens to ' + toMintAccounts[i])
       copperToken.mint(toMintAccounts[i], toMintAmount, {privateFor: [harborPubKey, issuer1PubKey]})
