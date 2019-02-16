@@ -14,19 +14,33 @@
    limitations under the License.
 */
 
-var RegulatedToken = artifacts.require("./RegulatedToken.sol"),
-    ServiceRegistry = artifacts.require("./ServiceRegistry.sol"),
-    TokenRegulatorService = artifacts.require("./TokenRegulatorService.sol");
+const ServiceRegistry = artifacts.require("./ServiceRegistry.sol");
+const TestRegulatorService = artifacts.require("./TestRegulatorService.sol");
+const TestRegulatedToken = artifacts.require("./TestRegulatedToken.sol");
+const harborPubKey = "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo="
+const issuer1PubKey = "QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc="
+const issuer2PubKey = "1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg="
+const issuer3PubKey = "oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8"
 
 module.exports = async function(deployer) {
+  const log = deployer.logger.log;
+  try {
+    await deployer.deploy(TestRegulatorService, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]});
+    const regulator = await TestRegulatorService.deployed();
 
-  deployer.deploy(TokenRegulatorService).then(async () => {
-    const regulator = await TokenRegulatorService.deployed();
-    return deployer.deploy(ServiceRegistry, regulator.address);
-  }).then(async () => {
+    await deployer.deploy(ServiceRegistry, regulator.address, {privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey], overwrite: false});
     const registry = await ServiceRegistry.deployed();
-    return deployer.deploy(RegulatedToken, registry.address, "Example", "EXPL");
-  }).then(async () => {
-    const token = await RegulatedToken.deployed();
-  });
+
+    const copperToken = await deployer.new(TestRegulatedToken, registry.address, "Copper Token", "CPPR", {privateFor: [harborPubKey, issuer1PubKey]})
+    log('copperToken.address ' + copperToken.address);
+
+    const silverToken = await deployer.new(TestRegulatedToken, registry.address, "Silver Token", "SLVR", {privateFor: [harborPubKey, issuer2PubKey]})
+    log('silverToken.address ' + silverToken.address);
+
+    const goldToken = await deployer.new(TestRegulatedToken, registry.address, "Gold Token", "GOLD", {privateFor: [harborPubKey, issuer3PubKey]})
+    log('goldToken.address ' + goldToken.address);
+  }
+  catch (e) {
+    log(e);
+  }
 };

@@ -71,6 +71,13 @@ const configs = {
       'SLVR': '0x9843430d81290c90701bd655a7f19222b1de1f5f',
       'GOLD': '0x88c3f6e2ddd8e65ec548197f2670623c5d876459'
     }
+  },
+  harbor: {
+    tokenAddresses: {
+      'CPPR': '0x3950943d8d86267c04a4bba804f9f0b8a01c2fb8',
+      'SLVR': '0x064f860b6683223b03b38252853d5d2c210cce19',
+      'GOLD': '0xb81c1fea49fab3687941a4fb31027eabd98e66dc',
+    }
   }
 };
 
@@ -88,7 +95,7 @@ if (env === 'kovan') {
   ensure(infuraKey, 'No infuraKey');
   provider = new HDWalletProvider(kovanMnemonic, `https://kovan.infura.io/${infuraKey}`);
 } else {
-  provider = new Web3.providers.HttpProvider('http://localhost:8545');
+  provider = new Web3.providers.HttpProvider('http://localhost:22000');
 }
 const web3 = new Web3(provider);
 
