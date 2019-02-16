@@ -17,21 +17,25 @@
 module.exports = {
   networks: {
     harbor: {
+      // BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=
       host: "localhost",
       port: 22000,
       network_id: "*" // Match any network id
     },
     issuer2: {
+      // QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc=
       host: "localhost",
       port: 22001,
       network_id: "*" // Match any network id
     },
     issuer3: {
+      // 1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=
       host: "localhost",
       port: 22002,
       network_id: "*" // Match any network id
     },
     issuer4: {
+      // oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8
       host: "localhost",
       port: 22003,
       network_id: "*" // Match any network id
