@@ -23,21 +23,21 @@ module.exports = {
       gasPrice: 0,
       network_id: "*" // Match any network id
     },
-    issuer2: {
+    issuer1: {
       // QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc=
       host: "localhost",
       port: 22001,
       gasPrice: 0,
       network_id: "*" // Match any network id
     },
-    issuer3: {
+    issuer2: {
       // 1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=
       host: "localhost",
       port: 22002,
       gasPrice: 0,
       network_id: "*" // Match any network id
     },
-    issuer4: {
+    issuer3: {
       // oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8
       host: "localhost",
       port: 22003,
