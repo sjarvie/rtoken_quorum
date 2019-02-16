@@ -16,7 +16,8 @@
     "ganache-cli": "^6.1.0",
     "truffle": "^4.1.5",
     "truffle-hdwallet-provider": "^0.0.3",
-    "web3": "^1.0.0-beta.33"
+    "web3": "^1.0.0-beta.33",
+    "quorum-js": "0.2.0"
   },
   "dependencies": {
     "bignumber.js": "^6.0.0",
