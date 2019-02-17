@@ -18,16 +18,16 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "./ServiceRegistry.sol";
 import "./RegulatorService.sol";
 
 /// @notice An ERC-20 token that has the ability to check for trade validity
-contract RegulatedToken is ERC20, ERC20Detailed, ERC20Mintable {
+contract RegulatedToken is IERC20, ERC20, ERC20Detailed, ERC20Mintable {
 
 
-
-    constructor (ServiceRegistry _registry, string memory _name, string memory _symbol) ERC20Detailed(_name, _symbol, RTOKEN_DECIMALS) public {
+    constructor (ServiceRegistry _registry, string memory _name, string memory _symbol) ERC20Detailed(_name, _symbol, RTOKEN_DECIMALS) ERC20() public {
         registry = _registry;
     }
 

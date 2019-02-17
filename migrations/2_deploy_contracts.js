@@ -36,89 +36,127 @@ const toMintAccounts = [
 
 module.exports = async function(deployer) {
   const log = deployer.logger.log;
-  try {
-    await deployer.deploy(TokenRegulatorService, {
+  await deployer.deploy(TokenRegulatorService, {
+    gasPrice: 0,
+    privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+  });
+  const regulator = await TokenRegulatorService.deployed();
+
+  await deployer.deploy(ServiceRegistry, regulator.address, {
+    gasPrice: 0,
+    privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey],
+    overwrite: false
+  });
+  const registry = await ServiceRegistry.deployed();
+
+  const copperToken = await deployer.new(
+    RegulatedToken,
+    registry.address,
+    "Copper Token",
+    "CPPR",
+    { gasPrice: 0, privateFor: [harborPubKey, issuer1PubKey] }
+  );
+  log("copperToken.address " + copperToken.address);
+
+  const silverToken = await deployer.new(
+    RegulatedToken,
+    registry.address,
+    "Silver Token",
+    "SLVR",
+    { gasPrice: 0, privateFor: [harborPubKey, issuer2PubKey] }
+  );
+  log("silverToken.address " + silverToken.address);
+
+  const goldToken = await deployer.new(
+    RegulatedToken,
+    registry.address,
+    "Gold Token",
+    "GOLD",
+    { gasPrice: 0, privateFor: [harborPubKey, issuer3PubKey] }
+  );
+  log("goldToken.address " + goldToken.address);
+
+  // Set permissions on regulator service
+  await regulator.setPermission(
+    copperToken.address,
+    toMintAccounts[0],
+    0x1 | 0x2,
+    {
       gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    });
-    const regulator = await TokenRegulatorService.deployed();
-
-    await deployer.deploy(ServiceRegistry, regulator.address, {
-      gasPrice: 0,
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey],
-      overwrite: false
-    });
-    const registry = await ServiceRegistry.deployed();
-
-    const copperToken = await deployer.new(
-      RegulatedToken,
-      registry.address,
-      "Copper Token",
-      "CPPR",
-      { gasPrice: 0, privateFor: [harborPubKey, issuer1PubKey] }
-    );
-    log("copperToken.address " + copperToken.address);
-
-    const silverToken = await deployer.new(
-      RegulatedToken,
-      registry.address,
-      "Silver Token",
-      "SLVR",
-      { gasPrice: 0, privateFor: [harborPubKey, issuer2PubKey] }
-    );
-    log("silverToken.address " + silverToken.address);
-
-    const goldToken = await deployer.new(
-      RegulatedToken,
-      registry.address,
-      "Gold Token",
-      "GOLD",
-      { gasPrice: 0, privateFor: [harborPubKey, issuer3PubKey] }
-    );
-    log("goldToken.address " + goldToken.address);
-
-    // Set permissions on regulator service
-    regulator.setPermission(copperToken.address, toMintAccounts[0], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(copperToken.address, toMintAccounts[1], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(copperToken.address, toMintAccounts[2], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(silverToken.address, toMintAccounts[0], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(silverToken.address, toMintAccounts[1], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(silverToken.address, toMintAccounts[2], 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Receive
-    regulator.setPermission(goldToken.address, toMintAccounts[0], 0x1 | 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Send/Receive
-    regulator.setPermission(goldToken.address, toMintAccounts[1], 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Receive
-    regulator.setPermission(goldToken.address, toMintAccounts[2], 0x2, {
-      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
-    }); // Receive
-
-    for (var i = 0; i < toMintAccounts.length; i++) {
-      log("Minting tokens to " + toMintAccounts[i]);
-      copperToken.mint(toMintAccounts[i], toMintAmount, {
-        privateFor: [harborPubKey, issuer1PubKey]
-      });
-      silverToken.mint(toMintAccounts[i], toMintAmount, {
-        privateFor: [harborPubKey, issuer2PubKey]
-      });
-      goldToken.mint(toMintAccounts[i], toMintAmount, {
-        privateFor: [harborPubKey, issuer3PubKey]
-      });
     }
-  } catch (e) {
-    log(e);
+  ); // Send/Receive
+  await regulator.setPermission(
+    copperToken.address,
+    toMintAccounts[1],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(
+    copperToken.address,
+    toMintAccounts[2],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(
+    silverToken.address,
+    toMintAccounts[0],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(
+    silverToken.address,
+    toMintAccounts[1],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(silverToken.address, toMintAccounts[2], 0x2, {
+    gasPrice: 0,
+    privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+  }); // Receive
+  await regulator.setPermission(
+    goldToken.address,
+    toMintAccounts[0],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(goldToken.address, toMintAccounts[1], 0x2, {
+    gasPrice: 0,
+    privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+  }); // Receive
+  await regulator.setPermission(goldToken.address, toMintAccounts[2], 0x2, {
+    gasPrice: 0,
+    privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+  }); // Receive
+
+  for (var i = 0; i < toMintAccounts.length; i++) {
+    log("Minting tokens to " + toMintAccounts[i]);
+    await copperToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey]
+    });
+    await silverToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer2PubKey]
+    });
+    await goldToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer3PubKey]
+    });
   }
 };
