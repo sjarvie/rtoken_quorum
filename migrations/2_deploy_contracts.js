@@ -82,6 +82,7 @@ module.exports = async function(deployer) {
     toMintAccounts[0],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
@@ -90,6 +91,7 @@ module.exports = async function(deployer) {
     toMintAccounts[1],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
@@ -98,6 +100,7 @@ module.exports = async function(deployer) {
     toMintAccounts[2],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
@@ -106,6 +109,7 @@ module.exports = async function(deployer) {
     toMintAccounts[0],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
@@ -114,10 +118,12 @@ module.exports = async function(deployer) {
     toMintAccounts[1],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
   await regulator.setPermission(silverToken.address, toMintAccounts[2], 0x2, {
+    gasPrice: 0,
     privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
   }); // Receive
   await regulator.setPermission(
@@ -125,25 +131,31 @@ module.exports = async function(deployer) {
     toMintAccounts[0],
     0x1 | 0x2,
     {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
     }
   ); // Send/Receive
   await regulator.setPermission(goldToken.address, toMintAccounts[1], 0x2, {
+    gasPrice: 0,
     privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
   }); // Receive
   await regulator.setPermission(goldToken.address, toMintAccounts[2], 0x2, {
+    gasPrice: 0,
     privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
   }); // Receive
 
   for (var i = 0; i < toMintAccounts.length; i++) {
     log("Minting tokens to " + toMintAccounts[i]);
     await copperToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey]
     });
     await silverToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer2PubKey]
     });
     await goldToken.mint(toMintAccounts[i], toMintAmount, {
+      gasPrice: 0,
       privateFor: [harborPubKey, issuer3PubKey]
     });
   }
