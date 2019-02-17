@@ -14,13 +14,12 @@
   "license": "MIT",
   "devDependencies": {
     "ganache-cli": "^6.1.0",
-    "truffle": "^4.1.5",
+    "truffle": "^5.0.4",
     "truffle-hdwallet-provider": "^0.0.3",
-    "web3": "^1.0.0-beta.33",
-    "quorum-js": "0.2.0"
+    "web3": "^1.0.0-beta.46"
   },
   "dependencies": {
     "bignumber.js": "^6.0.0",
-    "zeppelin-solidity": "^1.4.0"
+    "openzeppelin-solidity": "^2.1.2"
   }
 }
