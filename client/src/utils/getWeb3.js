@@ -1,8 +1,7 @@
 import Web3 from "web3";
-
-const getWeb3 = (port) =>
-  // console.log(port)
-  new Promise((resolve, reject) => {
+ 
+function getWeb3 (port) {
+  return new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     // window.addEventListener("load", async () => {
     //   // Modern dapp browsers...
@@ -17,23 +16,19 @@ const getWeb3 = (port) =>
     //       reject(error);
     //     }
     //   }
-    //   // Legacy dapp browsers...
-    //   else if (window.web3) {
-    //     // Use Mist/MetaMask's provider.
-    //     const web3 = window.web3;
-    //     console.log("Injected web3 detected.");
-    //     resolve(web3);
-    //   }
       // Fallback to localhost; use dev console port by default...
       // else {
+       // console.log("http://localhost"+ port)
+       console.log(port)
         const provider = new Web3.providers.HttpProvider(
-          "http://localhost:22000"
+          "http://localhost:"+port
         );
         const web3 = new Web3(provider);
-        console.log("No web3 instance injected, using Local web3.");
         resolve(web3);
       //}
   //  });
-  });
+  })
+}
 
-export default getWeb3;
+
+export default getWeb3
