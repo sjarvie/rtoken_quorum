@@ -1,31 +1,41 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import RegulatedToken from "./contracts/RegulatedToken.json";
 import getWeb3 from "./utils/getWeb3";
 
 import "./App.css";
 
+const HARBOR = 
+  { name:"Registry", address:"0xa1650fb8c6f586c4e171d28c9f6bef85ca56695b", port: "22000"}
+const COPPER = { name:"Copper", address:"0x6b50ce12b55035c835dcdb977450cb6af12e79d5", port: "22001"}
+const SILVER = {  name:"Silver", address: "0x830b90b17a25826e5bfc0adda1927d54a52f9e07", port: "22002"} 
+const GOLD = { name:"Gold", address: "0x45ce4de679dda2846c842b0356dc2db075aee2cf", port: "22003"};
+
+const R_TOKENS = [HARBOR, GOLD, COPPER, SILVER]
+
+
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { web3: null, contract: null };
+  
 
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+      const web3 = await getWeb3(HARBOR.port);
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      console.log(accounts)
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
+        RegulatedToken.abi,
+        GOLD.address,
       );
-
+      console.log(instance)
+      let a = await web3.eth.getBalance(GOLD.address)
+      console.log(a)
+    
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance });
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -35,17 +45,15 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
+  updateInstance = () => {
+    let new_address = COPPER.address
     // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
+    const instance =  this.state.web3.eth.Contract(
+      RegulatedToken.abi,
+      new_address,
+    );
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
+    this.setState({ contract: instance });
   };
 
   render() {
@@ -54,17 +62,9 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <h1>Permissioned Balance access</h1>
+        <p>From different ports corresponding to different nodes, your view access will be limited.</p>
+        <h2>Play with the sandbox below</h2>
       </div>
     );
   }
