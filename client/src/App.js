@@ -12,10 +12,10 @@ const BigNumber = require("bignumber.js");
 const quorumjs = require("quorumjs");
 
 const MASTER = 
-  { name:"Regulator", address:"0xa1650fb8C6F586c4e171D28C9F6bEf85cA56695B", port: "22000"} // TODO PORTS MIGHT NOT BE RIGHT
-const COPPER = { name:"Copper", address:"0x6b50cE12b55035C835DCDB977450Cb6AF12e79D5", port: "22001"}
-const SILVER = {  name:"Silver", address: "0x830b90B17A25826e5bfC0AddA1927d54A52F9e07", port: "22002"} 
-const GOLD = { name:"Gold", address: "0x45cE4De679dDa2846c842B0356dC2db075AEE2Cf", port: "22003"};
+  { name:"Regulator", address:"0x896cDA011140a8d2B1F9E91AA2049bFc846c3685", port: "22000"} // TODO PORTS MIGHT NOT BE RIGHT
+const COPPER = { name:"Copper", address:"0xA96c3f58E8f3e3d2B81119e15F29cAcda617f4D3", port: "22001"}
+const SILVER = {  name:"Silver", address: "0x72910A992d84D2F2877a7392Fb85135C89972186", port: "22002"} 
+const GOLD = { name:"Gold", address: "0x65dB38ef87466d26F429f052447bf23175974810", port: "22003"};
 
 const toMintAccounts = {
   P1: "0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E",

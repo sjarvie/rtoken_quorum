@@ -27,7 +27,12 @@ const BigNumber = require("bignumber.js");
 const web3 = new Web3(
   new Web3.providers.HttpProvider("http://localhost:22000")
 );
-const toMintAmount = web3.utils.toWei(new BigNumber(100).toString(), "ether");
+const toMintAmounts = [
+  web3.utils.toWei(new BigNumber(100).toString(), "ether"),
+  web3.utils.toWei(new BigNumber(80).toString(), "ether"),
+  web3.utils.toWei(new BigNumber(40).toString(), "ether"),
+  web3.utils.toWei(new BigNumber(20).toString(), "ether")
+]
 const toMintAccounts = [
   "0xed9d02e382b34818e88b88a309c7fe71e65f419d",
   "0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E",
@@ -78,6 +83,36 @@ module.exports = async function(deployer) {
   log("goldToken.address " + goldToken.address);
 
   // Set permissions on regulator service
+  await regulator.setPermission(
+    copperToken.address,
+    toMintAccounts[3],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(
+    silverToken.address,
+    toMintAccounts[3],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+  await regulator.setPermission(
+    goldToken.address,
+    toMintAccounts[3],
+    0x1 | 0x2,
+    {
+      gasPrice: 0,
+      privateFor: [harborPubKey, issuer1PubKey, issuer2PubKey, issuer3PubKey]
+    }
+  ); // Send/Receive
+
+
+
   await regulator.setPermission(
     copperToken.address,
     toMintAccounts[0],
@@ -147,15 +182,15 @@ module.exports = async function(deployer) {
 
   for (var i = 0; i < toMintAccounts.length; i++) {
     log("Minting tokens to " + toMintAccounts[i]);
-    await copperToken.mint(toMintAccounts[i], toMintAmount, {
+    await copperToken.mint(toMintAccounts[i], toMintAmounts[i], {
       gasPrice: 0,
       privateFor: [harborPubKey, issuer1PubKey]
     });
-    await silverToken.mint(toMintAccounts[i], toMintAmount, {
+    await silverToken.mint(toMintAccounts[i], toMintAmounts[i], {
       gasPrice: 0,
       privateFor: [harborPubKey, issuer2PubKey]
     });
-    await goldToken.mint(toMintAccounts[i], toMintAmount, {
+    await goldToken.mint(toMintAccounts[i], toMintAmounts[i], {
       gasPrice: 0,
       privateFor: [harborPubKey, issuer3PubKey]
     });
