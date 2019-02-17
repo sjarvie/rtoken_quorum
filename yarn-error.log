@@ -1,0 +1,73 @@
+Arguments: 
+  /Users/jarvie/.nvm/versions/node/v8.11.3/bin/node /Users/jarvie/.yarn/bin/yarn.js install
+
+PATH: 
+  /Users/jarvie/.yarn/bin:/Users/jarvie/.config/yarn/global/node_modules/.bin:/Users/jarvie/.pyenv/plugins/pyenv-virtualenv/shims:/Users/jarvie/.pyenv/shims:/Users/jarvie/.autojump/bin:/Users/jarvie/.nvm/versions/node/v8.11.3/bin:/Users/jarvie/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/go/packages/bin:/usr/local/bin:/Users/jarvie/.bin/:/Users/jarvie/bin:/src/google-cloud-sdk/bin
+
+Yarn version: 
+  1.13.0
+
+Node version: 
+  8.11.3
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: Unknown token: { line: 1, col: 16, type: 'INVALID', value: undefined } 1:16 in /src/personal/rtoken_quorum/yarn.lock
+      at Parser.unexpected (/Users/jarvie/.yarn/lib/cli.js:63211:11)
+      at Parser.parse (/Users/jarvie/.yarn/lib/cli.js:63342:14)
+      at parse (/Users/jarvie/.yarn/lib/cli.js:63413:17)
+      at module.exports.exports.default (/Users/jarvie/.yarn/lib/cli.js:62982:96)
+      at Function.<anonymous> (/Users/jarvie/.yarn/lib/cli.js:3035:63)
+      at Generator.next (<anonymous>)
+      at step (/Users/jarvie/.yarn/lib/cli.js:304:30)
+      at /Users/jarvie/.yarn/lib/cli.js:315:13
+      at <anonymous>
+
+npm manifest: 
+  {
+    "name": "r-token",
+    "version": "1.0.0",
+    "description": "Proof of concept for RegulatedToken on Quorum",
+    "main": "truffle.js",
+    "directories": {
+      "test": "test"
+    },
+    "scripts": {
+      "test": "truffle test",
+      "test:ganache": "yarn ganache-cli -m \"$RTOKEN_DEVELOPMENT_MNEMONIC\" -e 100"
+    },
+    "author": "Bob Remeika",
+    "license": "MIT",
+    "devDependencies": {
+      "ganache-cli": "^6.1.0",
+      "truffle": "^5.0.4",
+      "truffle-hdwallet-provider": "^0.0.3",
+      "web3": "^1.0.0-beta.46"
+    },
+    "dependencies": {
+      "bignumber.js": "^6.0.0",
+      "zeppelin-solidity": "^2.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  pragma solidity ^0.5.0;
+  
+  import './ERC20.sol';
+  
+  contract DetailedERC20 is ERC20 {
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+  
+    function DetailedERC20(string _name, string memory _symbol, uint8 _decimals) public {
+      name = _name;
+      symbol = _symbol;
+      decimals = _decimals;
+    }
+  }
