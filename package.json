@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "bignumber.js": "^6.0.0",
-    "openzeppelin-solidity": "^2.1.2"
+    "openzeppelin-solidity": "^2.1.2",
+    "quorumjs": "git+https://github.com/jpmorganchase/quorum.js.git"
   }
 }

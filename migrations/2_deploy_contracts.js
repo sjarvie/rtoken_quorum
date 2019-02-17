@@ -29,6 +29,7 @@ const web3 = new Web3(
 );
 const toMintAmount = web3.utils.toWei(new BigNumber(100).toString(), "ether");
 const toMintAccounts = [
+  "0xed9d02e382b34818e88b88a309c7fe71e65f419d",
   "0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E",
   "0x6c210c624B7D2A1a5E0Bba1207262DBa333D18E0",
   "0x367e45461Be0D299c47C60eAD4c079078d23243A"

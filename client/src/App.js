@@ -8,20 +8,24 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import "./App.css";
 
+const BigNumber = require("bignumber.js");
+const quorumjs = require("quorumjs");
+
 const MASTER = 
-  { name:"Regulator", address:"0xcc11df45aba0a4ff198b18300d0b148ad2468834", port: "22000"} // TODO PORTS MIGHT NOT BE RIGHT
-const COPPER = { name:"Copper", address:"0x67bb49f7bd40b6a1226d77dc07fb38f03680c94f", port: "22001"}
-const SILVER = {  name:"Silver", address: "0xa38e9cbd5f7acc5ce3790c1558d0d50669aeb577", port: "22002"} 
-const GOLD = { name:"Gold", address: "0x9ff7c866f0d8a6c7a6e478846f50e334e8cb93ae", port: "22003"};
+  { name:"Regulator", address:"0xa1650fb8C6F586c4e171D28C9F6bEf85cA56695B", port: "22000"} // TODO PORTS MIGHT NOT BE RIGHT
+const COPPER = { name:"Copper", address:"0x6b50cE12b55035C835DCDB977450Cb6AF12e79D5", port: "22001"}
+const SILVER = {  name:"Silver", address: "0x830b90B17A25826e5bfC0AddA1927d54A52F9e07", port: "22002"} 
+const GOLD = { name:"Gold", address: "0x45cE4De679dDa2846c842B0356dC2db075AEE2Cf", port: "22003"};
 
 const toMintAccounts = {
   P1: "0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E",
   P2: "0x6c210c624B7D2A1a5E0Bba1207262DBa333D18E0",
   P3: "0x367e45461Be0D299c47C60eAD4c079078d23243A",
+  P4: "0xed9d02e382b34818e88b88a309c7fe71e65f419d",
 }
 
 class App extends Component {
-  state = { web3: null, contract: null, balances: [0,0,0], issuer: COPPER, node: MASTER};
+  state = { web3: null, contract: null, balances: [0,0,0,0], issuer: COPPER, node: MASTER};
 
   componentDidMount = async () => {
     try {
@@ -37,11 +41,59 @@ class App extends Component {
     }
   };
 
+  sendTxn = async () => {
+    const address = "0xed9d02e382b34818e88b88a309c7fe71e65f419d";
+    const signAcct = this.state.web3.eth.accounts.decrypt(
+      {
+        address: "ed9d02e382b34818e88b88a309c7fe71e65f419d",
+        crypto: {
+          cipher: "aes-128-ctr",
+          ciphertext:
+            "4e77046ba3f699e744acb4a89c36a3ea1158a1bd90a076d36675f4c883864377",
+          cipherparams: { iv: "a8932af2a3c0225ee8e872bc0e462c11" },
+          kdf: "scrypt",
+          kdfparams: {
+            dklen: 32,
+            n: 262144,
+            p: 1,
+            r: 8,
+            salt: "8ca49552b3e92f79c51f2cd3d38dfc723412c212e702bd337a3724e8937aff0f"
+          },
+          mac: "6d1354fef5aa0418389b1a5d1f5ee0050d7273292a1171c51fd02f9ecff55264"
+        },
+        id: "a65d1ac3-db7e-445d-a1cc-b6c5eeaa05e0",
+        version: 3
+      },
+      ""
+    );
+    const nonce = await this.state.web3.eth.getTransactionCount(address)
+    const enclaveOptions = {
+      privateUrl: "http://localhost:9081"
+    };
+    const rawTransactionManager = quorumjs.RawTransactionManager(this.state.web3, enclaveOptions);
+    const builder = this.state.contract.methods.transfer("0x6897c4c4cc4Ec1581B2e978e07981B67F0e88d7E", this.state.web3.utils.toWei(new BigNumber(10).toString(), "ether"))
+    const txnParams = {
+      gasPrice: 0,
+      gasLimit: 4300000,
+      to: this.state.contract.address,
+      value: 0,
+      data: builder.encodeABI(),
+      from: signAcct,
+      privateFrom: "QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc=",
+      privateFor: ["BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=", "QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc="],
+      nonce
+    };
+    console.log(txnParams)
+    const result = await rawTransactionManager.sendRawTransaction(txnParams)
+    console.log(result)
+  }
+
   updateBalances = async () => {
     console.log("UPDATING BALANCES")
     let a = 0
     let b = 0 
     let c = 0 
+    let d = 0
     try {
       a = await this.state.contract.methods.balanceOf(toMintAccounts.P1).call()
     } catch{
@@ -57,9 +109,15 @@ class App extends Component {
     } catch{      
       console.log("BBAD")
   }
-    console.log([a,b,c])
+    try {
+      d = await this.state.contract.methods.balanceOf(toMintAccounts.P4).call()
+    } catch{      
+      console.log("BBAD")
+  }
+
+    console.log([a,b,c,d])
     
-    this.setState({ balances: [parseInt(a),parseInt(b),parseInt(c)] })
+    this.setState({ balances: [parseInt(a),parseInt(b),parseInt(c),parseInt(d)] })
   }
 
   updateContract = async () => {
@@ -174,11 +232,18 @@ class App extends Component {
               <th>{toMintAccounts.P3}</th>
               <th>{this.state.balances[2]}</th>
             </tr>
+            <tr>
+              <th>{toMintAccounts.P4}</th>
+              <th>{this.state.balances[3]}</th>
+            </tr>
           </tbody>
         </Table>
 
         <Button variant="outline-primary" onClick={this.updateBalances}>
           Update Balances
+        </Button>
+        <Button variant="outline-secondary" onClick={this.sendTxn}>
+          Send 10 Tokens
         </Button>
       </div>
 
